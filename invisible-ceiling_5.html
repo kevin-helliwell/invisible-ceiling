@@ -302,11 +302,26 @@ function wireCapture(){
 }
 
 /* ---------- gap math ---------- */
+function formatDuration(count, unit){
+  const n=parseInt(count,10);
+  if(!n||n<1) return "a while";
+  const isYear=(unit||"").toLowerCase().startsWith("year");
+  const word=n===1?(isYear?"year":"month"):(isYear?"years":"months");
+  return `${n} ${word}`;
+}
+function costHorizon(count, unit){
+  const n=parseInt(count,10)||1;
+  const isYear=(unit||"").toLowerCase().startsWith("year");
+  const plural=isYear?"years":"months";
+  if(n===1) return `2-3 ${plural}`;
+  return formatDuration(n, unit);
+}
 function gapData(){
   const c=Number(state.current)||0,d=Number(state.desired)||0;
   const mult=c>0?(d/c):0;
-  const dur=(state.stuckCount||"")+" "+(state.stuckUnit||"").toLowerCase();
-  return {c,d,gap:d-c,mult,dur};
+  const dur=formatDuration(state.stuckCount, state.stuckUnit);
+  const costDur=costHorizon(state.stuckCount, state.stuckUnit);
+  return {c,d,gap:d-c,mult,dur,costDur};
 }
 
 /* keyword fallback so the no-AI path still picks among all five */
@@ -344,7 +359,7 @@ function templateProfile(){
     archetype:guessArchetype(),
     pattern:`You're at ${fmt(g.c)||"this level"} trying to get to ${fmt(g.d)||"the next number"}, and you've been at it for ${g.dur||"a while"}. You're not missing skills — you can see the moves. When you can see the moves and the number still won't budge, it's not a strategy problem.`,
     protection:`Staying right here is doing something for you, even if it doesn't feel like it. Whatever's keeping you at this level used to keep you safe. It's not a flaw — it's a pattern that's outlived its job.`,
-    cost:`Picture another 2-3 ${g.dur||"stretch"} exactly like this one. It's not just the money you're leaving on the table — it's the good people who leave because there's no room to grow, the years you stay buried in the work, and the company you keep imagining but never build.`,
+    cost:`Picture another ${g.costDur||"stretch"} exactly like this one. It's not just the money you're leaving on the table — it's the good people who leave because there's no room to grow, the years you stay buried in the work, and the company you keep imagining but never build.`,
     lever:`Every fix you've reached for has been out there — a system, a hire, better timing. The real one is you, the person running it. And you couldn't see it because nobody can see their own ceiling from the inside.`
   };
 }
