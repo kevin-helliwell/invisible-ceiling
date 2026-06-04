@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Invisible Ceiling | Dr. Emily Hill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0b14; --ink-2:#15101f; --panel:#1b1426;
+    --line:rgba(255,255,255,.10);
+    --paper:#f4eef6; --muted:#a99bb5;
+    --magenta:#d94f8e; --magenta-soft:#e87aa9;
+    --purple:#7b5cff; --teal:#00afc3;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Outfit',sans-serif;
+    background:
+      radial-gradient(1100px 700px at 78% -8%, rgba(123,92,255,.16), transparent 60%),
+      radial-gradient(900px 600px at 12% 108%, rgba(212,41,107,.14), transparent 60%),
+      var(--ink);
+    color:var(--paper);min-height:100vh;line-height:1.55;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:48px 24px 80px;position:relative}
+  .teal{color:var(--teal)}
+
+  .seal{font-family:'Pinyon Script',cursive;font-size:3.4rem;line-height:1;color:var(--magenta);opacity:.9;text-align:center;margin-bottom:6px}
+  .brand{text-align:center;font-family:'Outfit';font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:.66rem;color:var(--muted);margin-bottom:54px}
+
+  .progress{display:flex;gap:7px;justify-content:center;margin-bottom:44px}
+  .dot{width:34px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);transition:.5s}
+  .dot.on{background:linear-gradient(90deg,var(--magenta),var(--purple))}
+
+  .step{display:none;animation:rise .7s cubic-bezier(.16,.84,.44,1) both}
+  .step.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-weight:600;letter-spacing:.26em;text-transform:uppercase;font-size:.66rem;color:var(--purple);margin-bottom:18px}
+  .eyebrow .teal{letter-spacing:.26em}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.3rem,5.6vw,3.5rem);line-height:1.06;letter-spacing:-.01em;margin-bottom:20px}
+  h1 em{font-style:italic;color:var(--teal)}
+  br.hb{display:none}
+  @media(max-width:640px){ br.hb{display:inline} }
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.1;margin-bottom:14px}
+  .positioning{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:clamp(1.25rem,2.9vw,1.6rem);line-height:1.3;color:var(--magenta);max-width:48ch;margin:0 0 28px;padding-left:18px;border-left:2px solid var(--purple)}
+  .lede{font-size:1.06rem;color:var(--muted);max-width:54ch;margin-bottom:24px}
+  .lede strong{color:var(--paper);font-weight:500}
+  .meta{font-size:.82rem;color:var(--muted);letter-spacing:.04em;margin-top:26px}
+
+  .field{margin-bottom:24px}
+  .field label{display:block;font-size:.95rem;color:var(--paper);margin-bottom:10px}
+  .field .hint{display:block;color:var(--muted);font-size:.82rem;margin-top:-3px;margin-bottom:10px}
+  .input-money{position:relative}
+  .input-money::before{content:"$";position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem}
+  .input-money input{padding-left:30px}
+  select,input[type=text],input[type=email],input[type=number],textarea{
+    width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--paper);
+    font-family:'Outfit';font-size:1rem;padding:15px 16px;border-radius:var(--radius);transition:.25s;
+  }
+  textarea{resize:vertical;min-height:104px;line-height:1.6}
+  select:focus,input:focus,textarea:focus{outline:none;border-color:var(--magenta);box-shadow:0 0 0 3px rgba(212,41,107,.16)}
+  .row{display:flex;gap:12px}
+  .row .grow{flex:1}.row .narrow{width:42%}
+  .qual-note{display:none;margin-top:8px;font-size:.85rem;color:var(--teal);background:rgba(0,175,195,.08);border:1px solid rgba(0,175,195,.3);border-radius:var(--radius);padding:12px 14px;line-height:1.45}
+  .qual-note.show{display:block}
+
+  .qblock{margin-bottom:34px}
+  .qnum{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--purple);margin-bottom:8px}
+  .qtext{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1.22;margin-bottom:6px}
+  .qsub{color:var(--muted);font-size:.86rem;margin-bottom:14px}
+
+  .btn{appearance:none;cursor:pointer;border:none;font-family:'Outfit';font-weight:600;font-size:1rem;letter-spacing:.02em;color:#fff;padding:16px 38px;border-radius:50px;background:linear-gradient(95deg,var(--magenta),var(--purple));transition:.25s;box-shadow:0 10px 30px -10px rgba(212,41,107,.6)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 16px 38px -10px rgba(123,92,255,.6)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--paper);color:var(--paper);transform:none}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:18px}
+
+  .archetype-card{background:linear-gradient(160deg,var(--panel),var(--ink-2));border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;margin-bottom:24px;position:relative;overflow:hidden}
+  .archetype-card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px 200px at 100% 0,rgba(0,175,195,.16),transparent 60%);pointer-events:none}
+  .arch-label{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+  .arch-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:2.6rem;line-height:1;margin-bottom:14px}
+  .arch-name em{font-style:italic;color:var(--magenta)}
+  .arch-tag{color:var(--muted);font-size:1.02rem;max-width:52ch}
+  .gapline{font-size:.92rem;color:var(--paper);margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+  .gapline b{color:var(--teal);font-weight:600}
+
+  .profile-block{margin:26px 0}
+  .pb-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--purple);margin-bottom:8px}
+  .pb-body{font-size:1.05rem;color:var(--paper)}
+  .divider{height:1px;background:var(--line);margin:28px 0}
+
+  .cta-card{background:linear-gradient(135deg,rgba(212,41,107,.12),rgba(123,92,255,.10));border:1px solid rgba(212,41,107,.35);border-radius:var(--radius);padding:32px 28px;text-align:center}
+  .cta-card h2{margin-bottom:8px}
+  .cta-card p{color:var(--muted);max-width:48ch;margin:0 auto 22px}
+
+  .loader{text-align:center;padding:60px 0;color:var(--muted)}
+  .loader .pulse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:var(--paper);animation:breathe 2.2s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.45}50%{opacity:1}}
+  .fineprint{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;letter-spacing:.03em}
+
+  /* DEV one-page preview */
+  body.dev .step{display:block !important;border-bottom:1px dashed var(--line);padding-bottom:48px;margin-bottom:8px}
+  .dev-flag{display:none}
+  body.dev .dev-flag{display:block;text-align:center;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);border:1px dashed var(--teal);border-radius:50px;padding:7px 16px;margin:0 auto 30px;width:max-content}
+  body.dev .step::before{content:attr(data-name);display:block;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;opacity:.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="seal">M</div>
+  <div class="brand">Dr. Emily Hill</div>
+  <div class="dev-flag">Preview mode · full flow shown</div>
+
+  <div class="progress" id="progress"></div>
+
+  <!-- STEP 0 -->
+  <section class="step active" data-step="0" data-name="Screen 1 — The Hook">
+    <div class="eyebrow">The Invisible Ceiling · <span class="teal">A Diagnostic</span></div>
+    <h1>You changed the offer. <br class="hb">The funnel. The pricing. The team. <br class="hb">And you keep <em>hitting the same ceiling.</em></h1>
+    <p class="positioning">For 6- and 7-figure founders whose product already sells & are ready to scale to 10x this year without effort.</p>
+    <p class="lede">You can see every move on the board. You've pulled every move the playbooks name — some of them twice — and the number <strong>won't move.</strong> That's the part that feels heavy: not failing, but doing everything "right" and still getting no closer.</p>
+    <p class="lede">There's a reason. And <span class="teal">you can't see from where you're standing.</span> <strong>This finds it.</strong></p>
+    <button class="btn" onclick="next()">Show me my ceiling →</button>
+    <p class="meta">Four questions · about six minutes · one rule: tell the truth, not the version that sounds good.</p>
+  </section>
+
+  <!-- STEP 1 — NUMBERS -->
+  <section class="step" data-step="1" data-name="Screen 2 — The Gap">
+    <div class="eyebrow">Part One · <span class="teal">The Gap</span></div>
+    <h2>Where you are, and where you're going.</h2>
+    <p class="lede" style="margin-bottom:28px">By the numbers. The gap between where you are and where you want to be — and how long you've been stuck there.</p>
+
+    <div class="field">
+      <label>Current monthly revenue</label>
+      <div class="input-money"><input id="current" type="number" min="0" placeholder="e.g. 40000" oninput="qualCheck()"></div>
+    </div>
+    <div class="field">
+      <label>Target monthly revenue</label>
+      <div class="input-money"><input id="desired" type="number" min="0" placeholder="e.g. 120000"></div>
+    </div>
+    <div class="field">
+      <label>How long have you been working to move that needle?</label>
+      <span class="hint">Be honest. Chasing a number for years versus months matters.</span>
+      <div class="row">
+        <input class="grow" id="stuckCount" type="number" min="1" placeholder="e.g. 2">
+        <select class="narrow" id="stuckUnit"><option>Months</option><option>Years</option></select>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn" onclick="next()">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 — OPEN QUESTIONS -->
+  <section class="step" data-step="2" data-name="Screen 3 — The Seeing (open-ended)">
+    <div class="eyebrow">Part Two · <span class="teal">In Your Own Words</span></div>
+    <h2>The Story.</h2>
+    <p class="lede" style="margin-bottom:30px">There's no wrong answer here. Go with your gut — the more honest you are, the better this works.</p>
+    <div id="questions"></div>
+    <div class="nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn" id="q-continue" onclick="next()" disabled>Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 — CAPTURE -->
+  <section class="step" data-step="3" data-name="Screen 4 — Capture">
+    <div class="eyebrow">Almost there</div>
+    <h2>Where should your Ceiling Profile go?</h2>
+    <p class="lede" style="margin-bottom:30px">You'll see it right here in a second — and I'll send a copy to your inbox to keep.</p>
+    <div class="field"><label>First name</label><input id="name" type="text" placeholder="Your name"></div>
+    <div class="field"><label>Email</label><input id="email" type="email" placeholder="you@company.com"></div>
+    <div class="nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn" id="reveal" onclick="finish()" disabled>Reveal my ceiling →</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 — RESULT -->
+  <section class="step" data-step="4" data-name="Screen 5 — The Ceiling Profile">
+    <div id="loader" class="loader"><div class="pulse">Reading what you told me…</div></div>
+    <div id="result" style="display:none">
+      <div class="eyebrow">Your <span class="teal">Ceiling Profile</span></div>
+      <div class="archetype-card">
+        <div class="arch-label">Your Ceiling Archetype</div>
+        <div class="arch-name" id="archName"></div>
+        <div class="arch-tag" id="archTag"></div>
+        <div class="gapline" id="gapLine"></div>
+      </div>
+      <div class="profile-block"><div class="pb-label">The Pattern</div><div class="pb-body" id="pPattern"></div></div>
+      <div class="profile-block"><div class="pb-label">What It's Protecting</div><div class="pb-body" id="pProtection"></div></div>
+      <div class="profile-block"><div class="pb-label">What It's Costing You</div><div class="pb-body" id="pCost"></div></div>
+      <div class="profile-block"><div class="pb-label">The Lever</div><div class="pb-body" id="pLever"></div></div>
+      <div class="divider"></div>
+      <div class="cta-card">
+        <h2>This named your ceiling. Now let's break it.</h2>
+        <p>The Domino Call is one hour — I find the single move that can 2x your revenue in the next 90 days, and map your path to 10x. Often simpler than you'd guess.</p>
+        <button class="btn" onclick="window.open('https://book.emhill.com/domino','_blank')">Book your Domino Call →</button>
+      </div>
+      <p class="fineprint">Operator Engineering with Dr. Emily — build what matters, from the inside out.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — wire/adjust on deploy
+   ============================================================ */
+const DEV_MODE        = false;    // page-by-page flow (set true to preview the whole thing on one page)
+const CRM_WEBHOOK_URL = "";       // ← paste your GHL inbound webhook URL here
+const SHEET_WEBHOOK_URL= "";      // ← optional: Google Apps Script / Make / Zapier hook that appends a row to a Sheet
+const USE_AI          = true;     // AI personalization (works in preview; route via your backend on emhill.com)
+const REV_FLOOR       = 20000;    // monthly $ floor ($20K/mo). Below this the engagement isn't worth it — silently tags pmf_qualified.
+
+/* ============================================================ */
+const TOTAL_STEPS = 5;
+let step = 0;
+const state = { current:"", desired:"", stuckCount:"", stuckUnit:"Months",
+                answers:{}, name:"", email:"", qualified:true, archetype:null, profile:null };
+
+/* Archetypes — AI assigns one of these keys from the open answers */
+const ARCH = {
+  controller:{name:"The <em>Controller</em>", tag:"You keep your hands on everything. Letting go feels like losing control — so you stay the bottleneck, and the business only grows as fast as you have bandwidth to be the hands."},
+  technician:{name:"The <em>Technician</em>", tag:"You're great at the actual work, so you keep doing it. But staying in the work is also how you dodge stepping up to lead — and that's the ceiling."},
+  prover:{name:"The <em>Prover</em>", tag:"You hit the number and it's still not enough — the goalpost just keeps moving. The ceiling isn't out there; it's the feeling that you haven't proven it yet."},
+  hider:{name:"The <em>Hider</em>", tag:"You keep yourself smaller than your talent. Being seen feels risky, so you stay in the background — and nobody buys from a founder they can't find."},
+  protector:{name:"The <em>Protector</em>", tag:"You've built a good life — the team, the rhythm, the peace. Growing puts all of it at risk, so part of you keeps things right where they are."}
+};
+
+/* Open-ended questions. {desired} is replaced live with their number. */
+const QUESTIONS = [
+  {q:"You've tried to hit this target before. What have you already tried — and what happened?",
+   sub:"Think hires, funnels, pivots, programs — and tell me how each one actually went."},
+  {q:"Picture the month you finally hit {desired}. What emotions come up? Where do you feel this in your body?",
+   sub:"Whatever hits you first — go with that."},
+  {q:"To run a business at that level, who would you have to become? What would you have to stop doing?",
+   sub:"I don't mean a new strategy. I mean who you'd have to become."},
+  {q:"The real reason you're still stuck at this ceiling — the one you don't say out loud. What is it?",
+   sub:"This is the big one. Be real with me."}
+];
+
+/* ---------- helpers ---------- */
+function val(id){const el=document.getElementById(id);return el?el.value.trim():"";}
+function num(id){return parseFloat(val(id))||0;}
+function fmt(n){return n? "$"+Number(n).toLocaleString() : "";}
+function qText(t){const d=state.desired?fmt(state.desired):"that number";return t.replace("{desired}",d);}
+
+/* ---------- progress ---------- */
+function renderProgress(){
+  const p=document.getElementById('progress');p.innerHTML="";
+  for(let i=0;i<TOTAL_STEPS;i++){const d=document.createElement('div');d.className="dot"+(i<=step?" on":"");p.appendChild(d);}
+}
+
+/* ---------- qualifier (silent — tags pmf_qualified, no on-screen callout) ---------- */
+function qualCheck(){
+  const c=num('current');
+  state.qualified = c>=REV_FLOOR;
+}
+
+/* ---------- open questions ---------- */
+function renderQuestions(){
+  const c=document.getElementById('questions');if(!c)return;c.innerHTML="";
+  QUESTIONS.forEach((item,qi)=>{
+    const block=document.createElement('div');block.className="qblock";
+    block.innerHTML=`<div class="qnum">Question ${qi+1} of ${QUESTIONS.length}</div>
+      <div class="qtext">${qText(item.q)}</div><div class="qsub">${item.sub}</div>`;
+    const ta=document.createElement('textarea');
+    ta.id="q"+qi;ta.placeholder="In your own words…";ta.value=state.answers[qi]||"";
+    ta.addEventListener('input',()=>{state.answers[qi]=ta.value;checkQuestionsComplete();});
+    block.appendChild(ta);c.appendChild(block);
+  });
+}
+function checkQuestionsComplete(){
+  const btn=document.getElementById('q-continue');if(!btn)return;
+  const done=QUESTIONS.every((_,qi)=>state.answers[qi]&&state.answers[qi].trim().length>3);
+  btn.disabled=!done;
+}
+
+/* ---------- nav ---------- */
+function show(){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+  renderProgress();window.scrollTo({top:0,behavior:'smooth'});
+}
+function captureCurrent(){
+  if(step===1){state.current=num('current');state.desired=num('desired');state.stuckCount=val('stuckCount');state.stuckUnit=val('stuckUnit');}
+  if(step===3){state.name=val('name');state.email=val('email');}
+}
+function next(){captureCurrent();step++;if(step===2)renderQuestions();show();if(step===3)wireCapture();}
+function prev(){step--;show();}
+function wireCapture(){
+  const check=()=>{document.getElementById('reveal').disabled=!(val('name')&&/\S+@\S+\.\S+/.test(val('email')));};
+  ['name','email'].forEach(id=>document.getElementById(id).addEventListener('input',check));
+}
+
+/* ---------- gap math ---------- */
+function gapData(){
+  const c=Number(state.current)||0,d=Number(state.desired)||0;
+  const mult=c>0?(d/c):0;
+  const dur=(state.stuckCount||"")+" "+(state.stuckUnit||"").toLowerCase();
+  return {c,d,gap:d-c,mult,dur};
+}
+
+/* keyword fallback so the no-AI path still picks among all five */
+function guessArchetype(){
+  const t=(Object.values(state.answers).join(" ")||"").toLowerCase();
+  const hits=k=>k.reduce((n,w)=>n+(t.includes(w)?1:0),0);
+  const score={
+    controller:hits(["control","let go","delegate","trust them","hands","bottleneck","everything goes through","do it myself","myself"]),
+    technician:hits(["the work","in the weeds","i'm best","craft","doing it","hands-on","details","quality","build it myself"]),
+    prover:hits(["enough","prove","not yet","imposter","deserve","worthy","good enough","validation"]),
+    hider:hits(["seen","visible","visibility","hide","spotlight","exposed","attention","put myself out","afraid to"]),
+    protector:hits(["peace","my team","balance","comfortable","stable","risk","family","lifestyle","protect","too much"])
+  };
+  let top=null,max=0;
+  for(const k in score){ if(score[k]>max){max=score[k];top=k;} }
+  return top||"prover";
+}
+
+/* ---------- finish ---------- */
+async function finish(){
+  captureCurrent();
+  step=4;show();
+  document.getElementById('loader').style.display="block";
+  document.getElementById('result').style.display="none";
+  let profile=templateProfile();
+  if(USE_AI){try{const ai=await aiProfile();if(ai)profile={...profile,...ai};}catch(e){}}
+  state.profile=profile;
+  state.archetype=profile.archetype&&ARCH[profile.archetype]?profile.archetype:guessArchetype();
+  renderResult(profile);submitToCRM();
+}
+
+function templateProfile(){
+  const g=gapData();
+  return {
+    archetype:guessArchetype(),
+    pattern:`You're at ${fmt(g.c)||"this level"} trying to get to ${fmt(g.d)||"the next number"}, and you've been at it for ${g.dur||"a while"}. You're not missing skills — you can see the moves. When you can see the moves and the number still won't budge, it's not a strategy problem.`,
+    protection:`Staying right here is doing something for you, even if it doesn't feel like it. Whatever's keeping you at this level used to keep you safe. It's not a flaw — it's a pattern that's outlived its job.`,
+    cost:`Picture another 2-3 ${g.dur||"stretch"} exactly like this one. It's not just the money you're leaving on the table — it's the good people who leave because there's no room to grow, the years you stay buried in the work, and the company you keep imagining but never build.`,
+    lever:`Every fix you've reached for has been out there — a system, a hire, better timing. The real one is you, the person running it. And you couldn't see it because nobody can see their own ceiling from the inside.`
+  };
+}
+
+async function aiProfile(){
+  const g=gapData();
+  const answers=QUESTIONS.map((item,qi)=>`Q${qi+1} (${qText(item.q)})\nA: ${state.answers[qi]||""}`).join("\n\n");
+  const sys=`You are Dr. Emily Hill, a business identity strategist who sees the pattern beneath the tactics.
+Read a founder's open-ended answers and produce a Ceiling Profile.
+First classify them into ONE archetype key: controller, technician, prover, hider, protector — based on what their words reveal.
+Then sort their words into four bins.
+VOICE — write the way Emily talks: short, blunt, direct sentences. Plain everyday words, contractions, the occasional dash. Talk straight to them as "you." NO polished coaching aphorisms, no balanced/parallel triads, no fancy vocabulary (avoid words like "undeniable," "equilibrium," "compounded"), no "tells the story" or "two different countries" cadence. Sound like a sharp friend who sees them clearly — not a brand or a bot. Never call them broken; frame the pattern as protection that once kept them safe. No guarantees. Use their actual words back where you can.
+Respond with ONLY valid JSON, no markdown:
+{"archetype":"<key>","pattern":"...","protection":"...","cost":"...","lever":"..."}
+Each text field 2-3 sentences.`;
+  const user=`Numbers:
+- Current monthly revenue: ${fmt(g.c)}
+- Desired monthly revenue: ${fmt(g.d)}
+- Gap: ${fmt(g.gap)} (${g.mult?g.mult.toFixed(1)+"x":"n/a"})
+- Trying to move it for: ${g.dur}
+
+Open answers:
+${answers}
+
+"pattern" should use the gap + duration. "protection" names what their archetype is protecting. "cost" compounds 1-3 years forward. "lever" lands on identity, not strategy.`;
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:user}],system:sys})
+  });
+  const data=await res.json();
+  let txt=data.content.filter(b=>b.type==="text").map(b=>b.text).join("").trim().replace(/```json|```/g,"").trim();
+  return JSON.parse(txt);
+}
+
+function renderResult(p){
+  const key=p.archetype&&ARCH[p.archetype]?p.archetype:"prover";
+  const a=ARCH[key];const g=gapData();
+  document.getElementById('archName').innerHTML=a.name;
+  document.getElementById('archTag').textContent=a.tag;
+  document.getElementById('gapLine').innerHTML = (g.c&&g.d)
+    ? `Your gap: <b>${fmt(g.c)} → ${fmt(g.d)}/mo</b> · a <b>${g.mult.toFixed(1)}x</b> climb you've chased for <b>${g.dur}</b>.` : "";
+  document.getElementById('pPattern').textContent=p.pattern;
+  document.getElementById('pProtection').textContent=p.protection;
+  document.getElementById('pCost').textContent=p.cost;
+  document.getElementById('pLever').textContent=p.lever;
+  document.getElementById('loader').style.display="none";
+  document.getElementById('result').style.display="block";
+}
+
+/* ---------- CRM + Spreadsheet ---------- */
+function submitToCRM(){
+  const g=gapData();
+  const payload={
+    name:state.name,email:state.email,
+    pmf_qualified:state.qualified,
+    ceiling_archetype:state.archetype,
+    current_monthly:g.c,desired_monthly:g.d,gap:g.gap,gap_multiple:g.mult.toFixed(1)+"x",
+    time_stuck:g.dur,
+    answer_levers_tried:state.answers[0]||"",
+    answer_what_it_costs:state.answers[1]||"",
+    answer_who_to_become:state.answers[2]||"",
+    answer_unsaid_truth:state.answers[3]||"",
+    profile_pattern:state.profile?.pattern||"",
+    profile_protection:state.profile?.protection||"",
+    profile_cost:state.profile?.cost||"",
+    profile_lever:state.profile?.lever||"",
+    submitted_at:new Date().toISOString()
+  };
+  const body=JSON.stringify(payload);
+  const opts={method:"POST",headers:{"Content-Type":"application/json"},body};
+  if(CRM_WEBHOOK_URL)   fetch(CRM_WEBHOOK_URL,opts).catch(()=>{});   // → GHL contact + workflow
+  if(SHEET_WEBHOOK_URL) fetch(SHEET_WEBHOOK_URL,opts).catch(()=>{}); // → one row per founder in your Sheet
+}
+
+/* ---------- init / dev preview ---------- */
+function sampleResult(){
+  state.current=40000;state.desired=120000;state.stuckCount="2";state.stuckUnit="Years";state.archetype="controller";
+  const a=ARCH.controller;const g=gapData();
+  document.getElementById('archName').innerHTML=a.name;
+  document.getElementById('archTag').textContent=a.tag;
+  document.getElementById('gapLine').innerHTML=`Your gap: <b>${fmt(g.c)} → ${fmt(g.d)}/mo</b> · a <b>${g.mult.toFixed(1)}x</b> climb you've chased for <b>${g.dur}</b>.`;
+  document.getElementById('pPattern').textContent="(sample) You're at $40,000 trying to get to $120,000, and you've been at it two years. You're not missing skills — you can see the moves. When you can see the moves and the number still won't budge, it's not a strategy problem.";
+  document.getElementById('pProtection').textContent="(sample) Staying here lets you keep your hands on everything. Control has felt like safety — and growing would mean trusting it to run without you. That used to keep you safe; now it's the lid.";
+  document.getElementById('pCost').textContent="(sample) Two more years like this and it's not the missing $80K/mo that costs you most — it's the good people who leave because you can't give them room, and you still doing $40K/mo work at the head of a company that needs a CEO.";
+  document.getElementById('pLever').textContent="(sample) The fix was never another system. It's you — the person holding it all. And you couldn't see it because nobody can see their own ceiling from the inside.";
+  document.getElementById('loader').style.display="none";
+  document.getElementById('result').style.display="block";
+}
+function init(){
+  renderProgress();
+  if(DEV_MODE){
+    document.body.classList.add('dev');
+    renderQuestions();
+    sampleResult();
+  }
+}
+init();
+</script>
+</body>
+</html>
