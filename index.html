@@ -202,8 +202,8 @@
       <div class="divider"></div>
       <div class="cta-card">
         <h2>We named your ceiling. Now let's break it.</h2>
-        <p>Most founders circle this for years without ever naming it. Now let's go knock it down — the Domino Audit shows you the ONE move in your business that can 2x your revenue in the next 90 days, and put 10x in reach this year.</p>
-        <button class="btn" onclick="window.open('http://emhill.com/domino-training','_blank')">Let's break your ceiling →</button>
+        <p>Most founders circle this for years without ever naming it. Start with a short training on the ONE move in your business that can 2x your revenue in the next 90 days — then book your Domino Call when you're ready to knock it down.</p>
+        <button class="btn" id="cta-btn">Let's break your ceiling →</button>
       </div>
       <p class="fineprint">Operator Engineering with Dr. Emily — build what matters, from the inside out.</p>
     </div>
@@ -219,6 +219,7 @@ const CRM_WEBHOOK_URL = "";       // ← paste your GHL inbound webhook URL here
 const SHEET_WEBHOOK_URL= "";      // ← optional: Google Apps Script / Make / Zapier hook that appends a row to a Sheet
 const USE_AI          = true;     // AI personalization (works in preview; route via your backend on emhill.com)
 const REV_FLOOR       = 20000;    // monthly $ floor ($20K/mo). Below this the engagement isn't worth it — silently tags pmf_qualified.
+const CTA_URL         = "https://emhill.com/ceiling-profile-cta"; // redirect URL — change destination on server, not here
 
 /* ============================================================ */
 const TOTAL_STEPS = 5;
@@ -449,6 +450,8 @@ function sampleResult(){
   document.getElementById('result').style.display="block";
 }
 function init(){
+  const cta=document.getElementById('cta-btn');
+  if(cta) cta.onclick=()=>window.open(CTA_URL,'_blank');
   renderProgress();
   if(DEV_MODE){
     document.body.classList.add('dev');
