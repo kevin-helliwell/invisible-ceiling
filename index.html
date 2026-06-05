@@ -217,7 +217,8 @@
 const DEV_MODE        = false;    // page-by-page flow (set true to preview the whole thing on one page)
 const CRM_WEBHOOK_URL = "";       // ← paste your GHL inbound webhook URL here
 const SHEET_WEBHOOK_URL= "";      // ← optional: Google Apps Script / Make / Zapier hook that appends a row to a Sheet
-const USE_AI          = true;     // AI personalization (works in preview; route via your backend on emhill.com)
+const USE_AI          = true;     // AI personalization via ceiling-api.php (falls back to template if API fails)
+const API_URL         = "ceiling-api.php"; // server-side proxy — upload next to index.html, set key in PHP
 const REV_FLOOR       = 20000;    // monthly $ floor ($20K/mo). Below this the engagement isn't worth it — silently tags pmf_qualified.
 const CTA_URL         = "https://emhill.com/ceiling-profile-cta"; // redirect URL — change destination on server, not here
 
@@ -368,31 +369,17 @@ function templateProfile(){
 async function aiProfile(){
   const g=gapData();
   const answers=QUESTIONS.map((item,qi)=>`Q${qi+1} (${qText(item.q)})\nA: ${state.answers[qi]||""}`).join("\n\n");
-  const sys=`You are Dr. Emily Hill, a business identity strategist who sees the pattern beneath the tactics.
-Read a founder's open-ended answers and produce a Ceiling Profile.
-First classify them into ONE archetype key: controller, technician, prover, hider, protector — based on what their words reveal.
-Then sort their words into four bins.
-VOICE — write the way Emily talks: short, blunt, direct sentences. Plain everyday words, contractions, the occasional dash. Talk straight to them as "you." NO polished coaching aphorisms, no balanced/parallel triads, no fancy vocabulary (avoid words like "undeniable," "equilibrium," "compounded"), no "tells the story" or "two different countries" cadence. Sound like a sharp friend who sees them clearly — not a brand or a bot. Never call them broken; frame the pattern as protection that once kept them safe. No guarantees. Use their actual words back where you can.
-Respond with ONLY valid JSON, no markdown:
-{"archetype":"<key>","pattern":"...","protection":"...","cost":"...","lever":"..."}
-Each text field 2-3 sentences.`;
-  const user=`Numbers:
-- Current monthly revenue: ${fmt(g.c)}
-- Desired monthly revenue: ${fmt(g.d)}
-- Gap: ${fmt(g.gap)} (${g.mult?g.mult.toFixed(1)+"x":"n/a"})
-- Trying to move it for: ${g.dur}
-
-Open answers:
-${answers}
-
-"pattern" should use the gap + duration. "protection" names what their archetype is protecting. "cost" compounds 1-3 years forward. "lever" lands on identity, not strategy.`;
-  const res=await fetch("https://api.anthropic.com/v1/messages",{
+  const res=await fetch(API_URL,{
     method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:user}],system:sys})
+    body:JSON.stringify({
+      current:fmt(g.c),desired:fmt(g.d),gap:fmt(g.gap),
+      mult:g.mult?g.mult.toFixed(1)+"x":"n/a",dur:g.dur,answers
+    })
   });
+  if(!res.ok) throw new Error("API "+res.status);
   const data=await res.json();
-  let txt=data.content.filter(b=>b.type==="text").map(b=>b.text).join("").trim().replace(/```json|```/g,"").trim();
-  return JSON.parse(txt);
+  if(data.error) throw new Error(data.error);
+  return data;
 }
 
 function renderResult(p){

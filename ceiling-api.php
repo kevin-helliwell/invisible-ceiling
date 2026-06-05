@@ -1,7 +1,7 @@
 <?php
 /* ============================================================
    ceiling-api.php  —  server-side proxy for The Invisible Ceiling
-   Upload this next to invisible-ceiling.html in public_html.
+   Upload this next to index.html in public_html.
    Your Anthropic key lives HERE, on the server — never in the page.
    ============================================================ */
 
